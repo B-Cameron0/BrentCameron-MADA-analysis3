@@ -79,7 +79,8 @@ anova
 
 #Since the p-value is less than 0.05 (2.99e^-07), we can see that there is 
 #a difference between the two models (model 1 with no interaction between
-#variables, and model 2, which has interaction between variables)
+#variables, and model 2, which has interaction between variables). This means 
+#that the chosen predictor variables have an affect on the data
 
 #For our next model, since we will be using discrete data, we need to
 #change our model engine from a linear regression model to a generalized
@@ -116,9 +117,11 @@ glm_fit2
 #variables of weaknesssevere(0.006333), breathlessyes(0.000528), and the 
 #intercept(0.00000433)
 
-#Finally, we will once again compare the two models utilizing ANOVA
-anova.glm <- anova(glm_fit1$fit , glm_fit2$fit, test = "Chisq") 
+#Finally, we will compare the categorical models
+#The first model with RunnyNoseYes seems to show that RunnyNose is not a
+#significant predictor with a p-value of >0.05 and an intercept p-value of <0.05
+#The second model indicates that WeaknessSevere and BreathlessYes are both
+#statistically significant predictors with p-values less than 0.05.
 
-anova.glm
 
 
