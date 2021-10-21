@@ -123,10 +123,3 @@ alternative_fit <-
 alternative_fit %>%
   extract_fit_parsnip() %>%
   tidy()
-
-
-
-
-
-
-
