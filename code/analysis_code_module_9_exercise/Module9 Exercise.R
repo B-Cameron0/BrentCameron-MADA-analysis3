@@ -124,9 +124,100 @@ alternative_fit %>%
   extract_fit_parsnip() %>%
   tidy()
 
+####### Zane's section #######
+# First set up the model
+linear_mod <- linear_reg() %>%
+  set_engine("lm")
 
+### Runny nose as only predictor
+# Set up recipe
+temp_rn_rec <- recipes::recipe(BodyTemp ~ RunnyNose, data = train_data)
 
+# Set up workflow
+temp_run_wf <- workflows::workflow() %>%
+  workflows::add_recipe(temp_rn_rec) %>%
+  workflows::add_model(linear_mod)
 
+# Fit model
+temp_run_fit <- temp_run_wf %>%
+  parsnip::fit(data = train_data)
 
+temp_run_train_pred <- temp_run_fit %>%
+  augment(new_data = train_data) %>%
+  dplyr::mutate(
+    data = "train",
+    model = "RunnyNose"
+  )
 
+temp_run_test_pred <- temp_run_fit %>%
+  augment(new_data = test_data) %>%
+  dplyr::mutate(
+    data = "test",
+    model = "RunnyNose"
+  )
 
+### Model with all predictors
+# Set up recipe
+temp_all_rec <- recipes::recipe(BodyTemp ~ ., data = train_data)
+
+# Set up workflow
+temp_all_wf <- workflows::workflow() %>%
+  workflows::add_recipe(temp_all_rec) %>%
+  workflows::add_model(linear_mod)
+
+# Fit model
+temp_all_fit <- temp_all_wf %>%
+  parsnip::fit(data = train_data)
+
+temp_all_train_pred <- temp_all_fit %>%
+  augment(new_data = train_data) %>%
+  dplyr::mutate(
+    data = "train",
+    model = "All predictors"
+  )
+
+temp_all_test_pred <- temp_all_fit %>%
+  augment(new_data = test_data) %>%
+  dplyr::mutate(
+    data = "test",
+    model = "All predictors"
+  )
+
+# Bind predictions together
+temp_preds <- dplyr::bind_rows(
+  temp_run_test_pred,
+  temp_run_train_pred,
+  temp_all_test_pred,
+  temp_all_train_pred
+)
+
+# Calculate metrics for each set of predictions
+temp_mets <- temp_preds %>%
+  dplyr::group_by(data, model) %>%
+  yardstick::metrics(truth = BodyTemp, estimate = .pred)
+
+# Plot metrics
+metrics_plot <- temp_mets %>%
+  # Clean up names of metrics to be more understandable
+  dplyr::mutate(
+    .metric = forcats::fct_recode(
+      .metric,
+      "R squared" = "rsq",
+      "Mean absolute error (MAE)" = "mae",
+      "Root mean squared error (RMSE)" = "rmse"
+    )
+  ) %>%
+  # Make a bar plot
+  ggplot(aes(y = model, x = .estimate, fill = data)) +
+  geom_col(position = "dodge") +
+  facet_wrap(vars(.metric), scales = "free_x", ncol = 1) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    text = element_text(color = "black"),
+    strip.text = element_text(face = "bold")
+  ) +
+  scale_fill_manual(name = "data set", values = c("#E69F00", "#56B4E9")) +
+  labs(y = NULL, x = NULL)
+ggsave(here::here("results", "metric_plot.png"), plot = metrics_plot)
+metrics_plot
