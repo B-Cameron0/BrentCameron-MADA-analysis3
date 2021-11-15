@@ -1,4 +1,6 @@
-This folder contains a basic processing and analysis code respectively, to 
-best follow the data cleaning and analysis please run the processing script
-followed by the analysis script. Please note that a basic exploratory data
-analysis can also be found in the analysis_code folder
+Two analysis scripts can be found in the analysis_code_module_9_exercise
+sub folder and the Module_11_Exercise sub folder respectively.
+
+The basic analysis code can be found in the analysis_code sub folder, but all
+further examination of the data can be found in the module 9 and module 11
+subfolders.

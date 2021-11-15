@@ -14,6 +14,10 @@ data_location <- here::here("data","processed_data","exploration.rds")
 #load data. 
 mydata <- readRDS(data_location)
 
+#Before we create recipes to analysze the data, we will pre-process the data
+
+
+
 #Now that we have processed, explored, and analyzed the data, we will now 
 #work on splitting the data to create a training set and a testing set, 
 #which we will then use to measure model performance

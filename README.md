@@ -17,4 +17,10 @@ In the analysis, runnynose was chosen as the main predictor of interest
 while the previously chosen predictors of interest were also examined for any
 correlation
 
+Two additional analysis scripts that involve deeper modeling of the data can be found in the 'code' folder, with the sub folder 
+analysis_code_module_9_exercise involving processing, creating a recipe,
+and creating ROC and AUC curves, while a further detailed analysis of the data
+can be found in the module_11_exercise sub folder, which includes pre-processing
+of the data
+
 
