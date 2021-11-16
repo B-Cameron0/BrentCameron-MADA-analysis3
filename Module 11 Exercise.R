@@ -67,7 +67,31 @@ mydata4 <- mydata3 %>%
 glimpse(mydata4)
 
 #Everything looks good, all variables that can affect our models have been removed
+#We will rename the data to a more accessible name
+finaldata <- mydata4
+
 ################################
 #Part 2- Analysis
 ################################
 
+#Now that we have pre-processed our data we can begin our analysis, first we 
+#will set our seed
+set.seed(123)
+
+#We will now split the data by 70% for our training data and 30% for our testing
+data_split <- initial_split(finaldata, prop = 7/10,#7/10 stands for 70% training
+                            strata = BodyTemp) # and the rest (30%) for testing) 
+
+#Now we will organize our sets of training and test data
+train_data <- training(data_split)
+
+test_data <- testing(data_split)
+
+#We will now utilize a 5-fold cross validation, 5 times repeated, we will 
+#stratify on "BodyTemp" for the CV folds
+FoldCV5 <- vfold_cv(train_data, v = 5, repeats = 5, strata = "BodyTemp")
+
+#Now we will create our recipe for our data and fitting
+#We will code the categorical variables as dummy variables
+recipe_bodytemp <-recipe(BodyTemp ~ ., data = train_data) %>%
+                  step_dummy(all_nominal_predictors())
