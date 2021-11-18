@@ -340,7 +340,7 @@ randomforest_model <- rand_forest() %>%
   set_engine("ranger", 
              num.threads = 5,
              importance = "permutation") %>%
-  #We select either the continous or binary classification
+  #We select either the continuous or binary classification
   set_mode("regression")
 
 #We will set our workflow once again
